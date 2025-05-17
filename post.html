@@ -485,10 +485,7 @@
             </div>
         </div>
     </div>
-    
-<button style="background-color: purple; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 16px; cursor: pointer;" onclick="Compartilhar()">
-  <i class="fas fa-share"></i> Compartilhar
-</button>
+ 
     <footer>
         
         
@@ -645,7 +642,10 @@ text: window.location.href
                 <div class="post-content">
                     ${post.texto ? post.texto.replace(/\n/g, '<br><br>') : 'Nenhum conteúdo disponível.'}
                 </div>
-                
+                   
+<button style="background-color: purple; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 16px; cursor: pointer;" onclick="Compartilhar()">
+  <i class="fas fa-share"></i> Compartilhar
+</button>
                 <a href="index.html" class="back-btn">
                     <i class="fas fa-arrow-left"></i> Voltar para o Feed
                 </a>
