@@ -10,6 +10,10 @@ const { dados } = req.body
 if(!dados) {
 return res.status(400).send("Dados vazios")
 }
+if (req.method === 'OPTIONS') {
+  res.status(200).end();
+  return;
+}
 
 fetch("https://cm-tube-default-rtdb.firebaseio.com/feed/.json", {
 
