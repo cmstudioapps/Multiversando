@@ -8,7 +8,7 @@ export default function handler(req, res) {
     return;
   }
 
-  const { dados } = req.body;
+  const dados  = req.body;
 
   if (!dados) {
     return res.status(400).send("Dados vazios");
