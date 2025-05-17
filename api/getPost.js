@@ -11,7 +11,9 @@ export default function handler(req, res) {
   
   
 
-  fetch("https://cm-tube-default-rtdb.firebaseio.com/feed/.json").then(response => response.json())
-.then(data => res.status(200).json(data).catch (error => res.status(400).send(error))
+  fetch("https://cm-tube-default-rtdb.firebaseio.com/feed/.json")
+  .then(response => response.json())
+  .then(data => res.status(200).json(data))
+  .catch(error => res.status(400).send(error));
 
 }
