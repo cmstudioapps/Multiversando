@@ -486,6 +486,9 @@
         </div>
     </div>
     
+<button style="background-color: purple; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 16px; cursor: pointer;" onclick="Compartilhar()">
+  <i class="fas fa-share"></i> Compartilhar
+</button>
     <footer>
         
         
@@ -501,6 +504,16 @@
     </footer>
     
     <script>
+
+function Compartilhar() {
+
+navigator.share({
+title: "MULTIVERSANDO",
+text: window.location.href
+})
+
+}
+
         // Header scroll effect
         window.addEventListener('scroll', function() {
             const header = document.querySelector('header');
