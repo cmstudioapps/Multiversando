@@ -2,6 +2,9 @@ export default function handler (req, res) {
 
 const { dados } = req.body
 
+if(!dados) {
+return res.status(400).send("Dados vazios")
+}
 
 fetch("https://cm-tube-default-rtdb.firebaseio.com/feed/.json", {
 
