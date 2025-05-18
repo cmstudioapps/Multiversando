@@ -19,7 +19,22 @@ nome: dados.nome
     return res.status(400).send("Dados vazios");
   }
 
-  fetch("https://cm-tube-default-rtdb.firebaseio.com/chat/.json", {
+  fetch("https://cm-tube-default-rtdb.firebaseio.com/adm/" + login.nome + ".json")
+  .then(response => response.json())
+  .then(data => {
+    if (data && data.senha === login.senha) {
+      res.status(200).json({ logar: true });
+     enviar()
+    } else {
+      res.status(401).json({ logar: false, erro: "Senha ou nome incorretos" });
+    }
+  })
+  .catch(err => {
+    res.status(500).json({ logar: false, erro: "Erro ao verificar login" });
+  });
+    
+ function enviar() {
+ fetch("https://cm-tube-default-rtdb.firebaseio.com/chat/.json", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -29,4 +44,5 @@ nome: dados.nome
     .then(response => response.json())
     .then(data => res.status(200).send("Enviado ao banco de dados com sucesso!"))
     .catch(error => res.status(400).send("Erro ao enviar ao banco de dados: " + error));
+}
 }
