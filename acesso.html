@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso ao Sistema</title>
+    <style>
+        :root {
+            --cor-fundo: #121212;
+            --cor-texto: #e0e0e0;
+            --cor-destaque: #bb86fc;
+            --cor-borda: #333;
+            --cor-botao: #3700b3;
+            --cor-botao-hover: #6200ee;
+            --cor-erro: #cf6679;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container-login {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .titulo {
+            color: var(--cor-destaque);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .campo {
+            margin-bottom: 20px;
+        }
+        
+        .campo label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .campo input {
+            width: 100%;
+            padding: 12px;
+            background-color: #2d2d2d;
+            border: 1px solid var(--cor-borda);
+            border-radius: 4px;
+            color: var(--cor-texto);
+            font-size: 16px;
+        }
+        
+        .campo input:focus {
+            outline: none;
+            border-color: var(--cor-destaque);
+        }
+        
+        .botao {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--cor-botao);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .botao:hover {
+            background-color: var(--cor-botao-hover);
+        }
+        
+        .mensagem-erro {
+            color: var(--cor-erro);
+            text-align: center;
+            margin-top: 20px;
+            min-height: 24px;
+        }
+        
+        .rodape {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-login">
+        <h1 class="titulo">Acessar Admin</h1>
+        
+        <div class="campo">
+            <label for="identificador-usuario">Identificador do Usuário</label>
+            <input type="text" id="identificador-usuario" placeholder="Digite seu ID" required>
+        </div>
+        
+        <div class="campo">
+            <label for="senha-acesso">Senha de Acesso</label>
+            <input type="password" id="senha-acesso" placeholder="Digite sua senha" required>
+        </div>
+        
+        <button class="botao" id="botao-acessar" onclick="logar()">Acessar Sistema</button>
+        
+        <div class="mensagem-erro" id="mensagem-status"></div>
+        
+        <div class="rodape">
+            Problemas para acessar? <a href="https://www.instagram.com/programing_js?igsh=MTgzZHBsdmExNWJlbg==" id="link-suporte">Contate o suporte</a>
+        </div>
+    </div>
+<script>
+function msg(status) {
+  
+  document.getElementById("mensagem-status").innerHTML = status
+  
+  
+}
+
+
+function logar() {
+  const dados = {
+    nome: document.getElementById("identificador-usuario").value.trim(),
+    senha: document.getElementById("senha-acesso").value.trim()
+    
+  };
+  msg("Checando...")
+  fetch("https://multiversando.vercel.app/api/post.js", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(dados)
+    })
+    .then(response => response.json())
+    .then(resposta => {
+      if (resposta.logar === true) {
+        localStorage.setItem("nome",dados.nome)
+        localStorage.setItem("senha",dados.senha)
+        msg("Login realizado com sucesso!");
+        console.log(resposta.mensagem); // "Enviado ao banco dedados com sucesso!"
+        window.location.href = "painel.html"
+      } else {
+        msg("Falha no login: " + resposta.erro);
+      }
+    })
+    .catch(err => {
+      msg("Erro:", err);
+      alert("Erro na requisição.");
+    });
+}
+</script>
+</body>
+</html>
