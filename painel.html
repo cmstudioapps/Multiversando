@@ -537,7 +537,7 @@
         
         // Função para enviar postagem
         async function enviarPostagem() {
-            if(!localStorage.getItem("nome") && !localStorage.getItem("senha")) {
+            if(!localStorage.getItem("nome") || !localStorage.getItem("senha")) {
                 window.location.href ="acesso.html"
             }
             const title = document.getElementById('title').value.trim();
