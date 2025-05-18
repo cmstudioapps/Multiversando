@@ -22,7 +22,7 @@ export default function handler(req, res) {
   delete dados.nome;
   delete dados.senha;
 
-  fetch("https://cm-tube-default-rtdb.firebaseio.com/adm/" + login.nome + ".json")
+  fetch("https://cm-tube-default-rtdb.firebaseio.com/adm/" + login.nome + "/.json")
     .then(response => response.json())
     .then(data => {
       if (data && data.senha === login.senha) {
