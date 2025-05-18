@@ -657,6 +657,13 @@
     <script src="https://caiolibs.vercel.app/chat.js"></script>
 
    <script>
+if(!localStorage.getItem("nome")) {
+
+let nome = prompt("Digite seu nome por favor:")
+localStorage.setItem("nome",nome)
+}
+
+
   window.floatingChatOptions = {
     buttonColor: '#e91e63', // Cor do botão
     sendEndpoint: 'https://multiversando.vercel.app/api/chatSend.js', // Seu endpoint de envio
