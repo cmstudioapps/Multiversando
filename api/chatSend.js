@@ -9,7 +9,9 @@ export default function handler(req, res) {
   }
 
   const dados  = req.body;
-
+  const login = {dados.senha,dados.nome}
+  delete dados.senha
+  delete dados.nome
   if (!dados) {
     return res.status(400).send("Dados vazios");
   }
