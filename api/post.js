@@ -10,7 +10,7 @@ export default function handler(req, res) {
 
   const dados = req.body;
 
-if(dados.texto && dados.texto.length > 100) {
+if(dados.texto && dados.texto.length < 100) {
 res.status(400).json({ message: "É preciso mais de 100 caracteres"})
 }
 
