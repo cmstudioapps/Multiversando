@@ -10,12 +10,14 @@ export default function handler(req, res) {
 
   const dados = req.body;
 
-if(dados.texto && dados.texto.length < 100) {
-res.status(400).json({ message: "É preciso mais de 100 caracteres"})
-}
-
   if (!dados || !dados.nome || !dados.senha) {
-    return res.status(400).send("Dados vazios ou incompletos");
+    res.status(400).json({ message: "Dados vazios ou incompletos" });
+    return;
+  }
+
+  if (dados.texto && dados.texto.length < 100) {
+    res.status(400).json({ message: "É preciso mais de 100 caracteres" });
+    return;
   }
 
   const login = {
@@ -52,9 +54,4 @@ res.status(400).json({ message: "É preciso mais de 100 caracteres"})
     .catch(error => {
       res.status(500).json({ logar: false, erro: "Erro ao verificar login: " + error });
     });
-} 
-
-
-
-
 }
