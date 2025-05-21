@@ -52,7 +52,7 @@ if(dados.texto.length > 100) {
     });
 } else {
 
-res.status(400).json("É preciso mais de 100 caracteres)
+res.status(400).json({ message: "É preciso mais de 100 caracteres"})
 
 }
 }
