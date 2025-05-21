@@ -10,6 +10,8 @@ export default function handler(req, res) {
 
   const dados = req.body;
 
+if(dados.texto.length > 100) {
+
   if (!dados || !dados.nome || !dados.senha) {
     return res.status(400).send("Dados vazios ou incompletos");
   }
@@ -48,4 +50,9 @@ export default function handler(req, res) {
     .catch(error => {
       res.status(500).json({ logar: false, erro: "Erro ao verificar login: " + error });
     });
+} else {
+
+res.status(400).json("É preciso mais de 100 caracteres)
+
+}
 }
