@@ -27,10 +27,15 @@ export default async function handler(req, res) {
       body
     });
 
-    const data = await response.json();
+    const contentType = response.headers.get("content-type");
+    const isJson = contentType && contentType.includes("application/json");
+
+    const data = isJson ? await response.json() : await response.text();
 
     if (!response.ok) {
-      throw new Error(data.message || "Erro ao enviar notificação");
+      throw new Error(
+        (isJson ? data.message : data) || "Erro ao enviar notificação"
+      );
     }
 
     return res.status(200).json({ success: true, data });
