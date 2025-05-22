@@ -1,34 +1,21 @@
 module.exports = async (req, res) => {
-  // Configurações da API PushAlert
+  // Configurações fixas (pré-definidas)
   const apiUrl = 'https://api.pushalert.co/rest/v1/send';
-  const apiKey = '4963a3ae3e6d00a306ccf1ad9b15fb1c'; // Sua API key
+  const apiKey = '4963a3ae3e6d00a306ccf1ad9b15fb1c';
   
-  // Dados da notificação com validação robusta
+  // Mensagem totalmente pré-definida no código
   const notificationData = {
-    title: (req.query.title || "Notificação Importante").toString().substring(0, 100), // Limita a 100 caracteres
-    message: (req.query.message || "Você tem uma nova mensagem!").toString().substring(0, 250), // Limita a 250 caracteres
-    url: (req.query.url || "https://seusite.com").toString(),
-    icon: req.query.icon ? req.query.icon.toString() : undefined // Opcional
+    title: "Atualização do Sistema",
+    message: "Nova versão disponível! Clique para saber mais.",
+    url: "https://multiversando.vercel.app",
+    icon: "https://i.imgur.com/KkGuZYf.png",
+    // Campos adicionais suportados pela API
+    
+    button: "Ver Novidades",
+    timeToLive: 3600 // 1 hora em segundos
   };
 
-  // Validação rigorosa dos campos
-  if (!notificationData.title.trim() || !notificationData.message.trim() || !notificationData.url.trim()) {
-    return res.status(400).json({
-      success: false,
-      message: "Parâmetros inválidos",
-      details: {
-        title_required: "Mínimo 1 caractere",
-        message_required: "Mínimo 1 caractere",
-        url_required: "URL válida (ex: https://...)",
-        current_values: notificationData
-      }
-    });
-  }
-
   try {
-    // Preparar o corpo da requisição removendo campos undefined
-    const requestBody = JSON.parse(JSON.stringify(notificationData));
-    
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
@@ -36,36 +23,41 @@ module.exports = async (req, res) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      body: JSON.stringify(requestBody)
+      body: JSON.stringify(notificationData)
     });
 
     const result = await response.json();
 
-    // Verificação detalhada da resposta
     if (!response.ok || !result.success) {
-      console.error('Erro na API PushAlert:', result);
+      console.error('Erro na API PushAlert:', {
+        status: response.status,
+        response: result
+      });
       return res.status(400).json({
         success: false,
-        message: "Falha na API PushAlert",
-        api_response: result,
-        sent_data: notificationData
+        message: "Falha ao enviar notificação pré-definida",
+        error: result.msg || "Erro desconhecido na API",
+        notification_data: notificationData
       });
     }
 
     return res.status(200).json({
       success: true,
-      message: "Notificação push enviada!",
+      message: "Notificação pré-definida enviada com sucesso!",
       notification_id: result.id,
-      recipients: result.recipients
+      stats: {
+        recipients: result.recipients,
+        delivered: result.delivered,
+        failed: result.failed
+      }
     });
 
   } catch (error) {
     console.error('Erro no servidor:', error);
     return res.status(500).json({
       success: false,
-      message: "Erro interno no servidor",
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      message: "Erro ao processar notificação pré-definida",
+      error: error.message
     });
   }
 };
