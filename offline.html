@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiversando | Você está offline</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8a2be2;
+            --primary-dark: #6a1b9a;
+            --primary-light: #9c4dff;
+            --white: #ffffff;
+            --gray-light: #f5f5f5;
+            --gray: #cccccc;
+            --gray-dark: #333333;
+            --black: #121212;
+            --red: #e50914;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Background Effect */
+        .background-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--black) 0%, var(--primary-dark) 100%);
+            opacity: 0.8;
+            z-index: -1;
+        }
+        
+        .background-effect::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Content */
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--white);
+        }
+        
+        .offline-container {
+            max-width: 600px;
+            padding: 40px;
+            background-color: rgba(18, 18, 18, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .offline-icon {
+            font-size: 5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: var(--gray);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.6);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--white);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.6);
+        }
+        
+        /* Offline Content */
+        .offline-content {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(138, 43, 226, 0.3);
+        }
+        
+        .offline-content h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .offline-content p {
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .offline-container {
+                padding: 30px;
+            }
+            
+            .offline-icon {
+                font-size: 4rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            p {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.8rem;
+                margin-bottom: 20px;
+            }
+            
+            .offline-container {
+                padding: 25px 20px;
+            }
+            
+            .offline-icon {
+                font-size: 3.5rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-effect"></div>
+    
+    <a href="/" class="logo">
+        <i class="fas fa-play"></i>
+        MULTIVERSANDO
+    </a>
+    
+    <div class="offline-container">
+        <div class="offline-icon">
+            <i class="fas fa-wifi-slash"></i>
+        </div>
+        
+        <h1>Ops! Você está offline</h1>
+        <p>
+            Parece que sua conexão com a internet foi interrompida. Não se preocupe, 
+            você ainda pode tentar recarregar a página ou verificar sua conexão.
+        </p>
+        
+        <div>
+            <a href="#" onclick="window.location.reload()" class="btn btn-primary">
+                <i class="fas fa-sync-alt"></i> Recarregar Página
+            </a>
+            <a href="index.html" class="btn btn-secondary">
+                <i class="fas fa-home"></i> Página Inicial
+            </a>
+        </div>
+        
+        <div class="offline-content">
+            <h3>Enquanto você está offline:</h3>
+            <p>
+                Que tal relembrar aquela análise incrível que você leu por aqui? Ou quem sabe 
+                assistir novamente aquele filme que recomendamos?
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Verifica quando a conexão retorna
+        function updateOnlineStatus() {
+            if (navigator.onLine) {
+                window.location.reload();
+            }
+        }
+        
+        window.addEventListener('online', updateOnlineStatus);
+        
+        // Tenta recarregar periodicamente
+        setInterval(function() {
+            if (navigator.onLine) {
+                window.location.reload();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
