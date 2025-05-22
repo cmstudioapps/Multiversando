@@ -2,32 +2,7 @@
 <html lang="pt-BR">
 <head>
 
-<script>
-// Registrar o Service Worker
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then((registration) => {
-        console.log('ServiceWorker registrado com sucesso:', registration.scope);
-      })
-      .catch((error) => {
-        console.log('Falha no registro do ServiceWorker:', error);
-      });
-  });
-}
 
-// Verificar status da conexão
-function updateOnlineStatus() {
-  if (!navigator.onLine) {
-    // Pode adicionar lógica adicional se necessário
-    console.log('Você está offline!');
-  }
-}
-
-window.addEventListener('online', updateOnlineStatus);
-window.addEventListener('offline', updateOnlineStatus);
-updateOnlineStatus(); // Verificar status inicial
-</script>
 
 <script type="text/javascript">
         (function(d, t) {
