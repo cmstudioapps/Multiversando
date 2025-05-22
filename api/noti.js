@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Método não permitido" });
+  }
 
   const formData = new URLSearchParams();
   formData.append("auth_key", "4963a3ae3e6d00a306ccf1ad9b15fb1c");
@@ -20,13 +20,17 @@ export default async function handler(req, res) {
       body: formData.toString()
     });
 
-    const data = await response.json();
+    const text = await response.text();
 
-    if (!response.ok) {
-      throw new Error(data.message || "Erro ao enviar notificação");
+    try {
+      const data = JSON.parse(text);
+      if (!response.ok) throw new Error(data.message || "Erro ao enviar notificação");
+      return res.status(200).json({ success: true, data });
+    } catch (jsonError) {
+      console.error("Erro de parsing:", text);
+      throw new Error("Resposta inválida da PushAlert");
     }
 
-    return res.status(200).json({ success: true, data });
   } catch (error) {
     return res.status(500).json({ success: false, error: error.message });
   }
