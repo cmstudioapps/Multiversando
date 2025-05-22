@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
-  if (req.method !== "GET") {
-    return res.status(405).json({ error: "Método não permitido" });
-  }
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   const formData = new URLSearchParams();
   formData.append("auth_key", "4963a3ae3e6d00a306ccf1ad9b15fb1c");
