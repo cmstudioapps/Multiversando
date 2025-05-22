@@ -3,9 +3,7 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  if (req.method !== "GET") {
-    return res.status(405).json({ error: "Método não permitido" });
-  }
+  
 
   const PUSHALERT_API_KEY = "4963a3ae3e6d00a306ccf1ad9b15fb1c";
 
