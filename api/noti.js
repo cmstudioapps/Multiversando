@@ -7,8 +7,8 @@ module.exports = async (req, res) => {
   const notificationData = {
     title: "Nova Atualização!",
     message: "Temos novidades para você!",
-    url: "https://seusite.com", // URL para redirecionamento ao clicar
-    icon: "https://seusite.com/icon.png" // URL do ícone
+    url: "https://multiversando.vercel.app", // URL para redirecionamento ao clicar
+    icon: "https://i.imgur.com/KkGuZYf.png" // URL do ícone
   };
 
   try {
