@@ -1,30 +1,47 @@
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
+  // Configurações básicas
+  const apiUrl = 'https://api.pushalert.co/rest/v1/send';
+  const apiKey = 'SUA_API_KEY_AQUI'; // Substitua pela sua chave de API do PushAlert
+  
+  // Mensagem de notificação (pode ser personalizada conforme necessidade)
+  const notificationData = {
+    title: "Nova Atualização!",
+    message: "Temos novidades para você!",
+    url: "https://seusite.com", // URL para redirecionamento ao clicar
+    icon: "https://seusite.com/icon.png" // URL do ícone
+  };
+
   try {
-    const response = await fetch('https://pushalert.co/api/v1/send', {
+    // Enviar a notificação para todos os usuários
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
-        'Authorization': '4963a3ae3e6d00a306ccf1ad9b15fb1c',
-        'Content-Type': 'application/json',
+        'Authorization': `api_key=${apiKey}`,
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        title: 'Nova notificação!',
-        message: 'Você recebeu uma notificação via PushAlert.',
-        targetUrl: 'https://multiversando.vercel.app',
-      }),
+      body: JSON.stringify(notificationData)
     });
 
-    const text = await response.text(); // Pegue o texto cru para ver mesmo que não seja JSON
+    const result = await response.json();
 
-    console.log('Status da resposta:', response.status);
-    console.log('Resposta completa:', text);
-
-    if (!response.ok) {
-      throw new Error(`Erro da API PushAlert: ${response.status}`);
+    if (result.success) {
+      return res.status(200).json({
+        success: true,
+        message: "Notificação enviada com sucesso!",
+        data: result
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: "Falha ao enviar notificação",
+        error: result
+      });
     }
-
-    res.status(200).json({ success: true, response: text });
   } catch (error) {
-    console.error('Erro ao enviar notificação:', error);
-    res.status(500).json({ error: 'Erro interno na função' });
+    return res.status(500).json({
+      success: false,
+      message: "Erro no servidor",
+      error: error.message
+    });
   }
-}
+};
