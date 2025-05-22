@@ -6,19 +6,21 @@ export default async function handler(req, res) {
   const PUSHALERT_API_KEY = "4963a3ae3e6d00a306ccf1ad9b15fb1c";
 
   try {
+    const body = new URLSearchParams({
+      auth_key: PUSHALERT_API_KEY,
+      title: "OPAAAA!",
+      message: "Quital da uma olhada nos conteúdos novos?",
+      url: "https://multiversando.vercel.app",
+      icon: "https://i.imgur.com/KkGuZYf.png",
+      target: "all"
+    });
+
     const response = await fetch("https://pushalert.co/api/v1/send", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": PUSHALERT_API_KEY // aqui está corrigido
+        "Content-Type": "application/x-www-form-urlencoded"
       },
-      body: JSON.stringify({
-        title: "OPAAAA!",
-        message: "Quital da uma olhada nos conteúdos novos?",
-        url: "https://multiversando.vercel.app",
-        icon: "https://i.imgur.com/KkGuZYf.png",
-        target: "all"
-      })
+      body
     });
 
     const data = await response.json();
