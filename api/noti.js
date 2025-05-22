@@ -13,9 +13,16 @@ export default async function handler(req, res) {
       }),
     });
 
-    const data = await response.json();
+    const text = await response.text(); // Pegue o texto cru para ver mesmo que não seja JSON
 
-    res.status(200).json(data);
+    console.log('Status da resposta:', response.status);
+    console.log('Resposta completa:', text);
+
+    if (!response.ok) {
+      throw new Error(`Erro da API PushAlert: ${response.status}`);
+    }
+
+    res.status(200).json({ success: true, response: text });
   } catch (error) {
     console.error('Erro ao enviar notificação:', error);
     res.status(500).json({ error: 'Erro interno na função' });
