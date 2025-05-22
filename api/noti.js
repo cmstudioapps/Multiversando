@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     body: JSON.stringify({
       title: 'Nova notificação!',
       message: 'Você recebeu uma notificação via PushAlert.',
-      targetUrl: 'https://seusite.com',
+      targetUrl: 'https://multiversando.vercel.app',
       // outros parâmetros opcionais aqui
     }),
   });
