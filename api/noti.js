@@ -1,7 +1,7 @@
 module.exports = async (req, res) => {
   // Configurações básicas
   const apiUrl = 'https://api.pushalert.co/rest/v1/send';
-  const apiKey = 'SUA_API_KEY_AQUI'; // Substitua pela sua chave de API do PushAlert
+  const apiKey = '4963a3ae3e6d00a306ccf1ad9b15fb1c'; // Substitua pela sua chave de API do PushAlert
   
   // Mensagem de notificação (pode ser personalizada conforme necessidade)
   const notificationData = {
