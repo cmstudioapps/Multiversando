@@ -2,76 +2,90 @@ module.exports = async (req, res) => {
   const apiUrl = 'https://api.pushalert.co/rest/v1/send';
   const apiKey = '4963a3ae3e6d00a306ccf1ad9b15fb1c';
 
-  // Versão com encoding explícito e formatação garantida
+  // Versão com encoding alternativo e verificação extrema
   const payload = {
-    title: encodeURIComponent("Teste Básico").substring(0, 100),
-    message: encodeURIComponent("Testando API PushAlert").substring(0, 250),
-    url: "https://multiversando.vercel.app"
+    title: "Teste Final".trim(),
+    message: "Última tentativa de integração".trim(),
+    url: "https://multiversando.vercel.app/".trim()
   };
 
-  // Verificação final dos campos
-  if (!payload.title || !payload.message || !payload.url) {
+  // Verificação extrema dos campos
+  const validation = {
+    titleValid: payload.title.length > 0 && payload.title.length <= 100,
+    messageValid: payload.message.length > 0 && payload.message.length <= 250,
+    urlValid: payload.url.match(/^https?:\/\/.+\..+$/)
+  };
+
+  if (!validation.titleValid || !validation.messageValid || !validation.urlValid) {
     return res.status(400).json({
       success: false,
       message: "Validação local falhou",
-      details: {
-        title_length: payload.title.length,
-        message_length: payload.message.length,
-        url_valid: payload.url.startsWith('http')
-      }
+      validation,
+      payload
     });
   }
 
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
-
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `api_key=${apiKey}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'User-Agent': 'PushAlert-Node-Client/1.0'
-      },
-      body: JSON.stringify(payload),
-      signal: controller.signal
+    // Método alternativo usando XMLHttpRequest
+    const result = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', apiUrl, true);
+      xhr.setRequestHeader('Authorization', `api_key=${apiKey}`);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            try {
+              resolve(JSON.parse(xhr.responseText));
+            } catch (e) {
+              resolve(xhr.responseText);
+            }
+          } else {
+            reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
+          }
+        }
+      };
+      
+      xhr.onerror = function() {
+        reject(new Error('Erro de conexão'));
+      };
+      
+      xhr.send(JSON.stringify(payload));
     });
 
-    clearTimeout(timeout);
-
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error('Erro completo:', {
-        status: response.status,
-        headers: Object.fromEntries(response.headers.entries()),
-        body: errorData
-      });
-      
-      return res.status(502).json({
-        success: false,
-        message: "Erro na comunicação com a API PushAlert",
-        status_code: response.status,
-        api_response: errorData
+    if (result && result.success) {
+      return res.status(200).json({
+        success: true,
+        notification_id: result.id,
+        recipients: result.recipients
       });
     }
 
-    const result = await response.json();
-    return res.status(200).json(result);
-
-  } catch (error) {
-    console.error('Erro completo:', {
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-      payload_sent: payload
+    return res.status(400).json({
+      success: false,
+      message: "API PushAlert retornou erro",
+      api_response: result
     });
 
-    return res.status(500).json({
+  } catch (error) {
+    console.error('Erro crítico:', {
+      timestamp: new Date().toISOString(),
+      error: error.message,
+      payload,
+      stack: error.stack
+    });
+
+    return res.status(503).json({
       success: false,
-      message: "Erro no servidor",
-      error_type: error.name,
-      suggestion: "Verifique a API key e os logs do servidor"
+      message: "Serviço indisponível",
+      technical_message: "Falha persistente na comunicação com PushAlert",
+      action_required: [
+        "Verifique a API Key no dashboard",
+        "Confira os logs de erro do PushAlert",
+        "Contate o suporte técnico do PushAlert"
+      ],
+      support_contact: "support@pushalert.co"
     });
   }
 };
