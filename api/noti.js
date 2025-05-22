@@ -1,19 +1,23 @@
 module.exports = async (req, res) => {
-  // Configurações fixas (pré-definidas)
   const apiUrl = 'https://api.pushalert.co/rest/v1/send';
   const apiKey = '4963a3ae3e6d00a306ccf1ad9b15fb1c';
-  
-  // Mensagem totalmente pré-definida no código
+
+  // Dados da notificação conforme exigido pela API
   const notificationData = {
-    title: "Atualização do Sistema",
-    message: "Nova versão disponível! Clique para saber mais.",
-    url: "https://multiversando.vercel.app",
+    title: "Atualização do Sistema",       // Obrigatório
+    message: "Nova versão disponível!",    // Obrigatório
+    url: "https://multiversando.vercel.app", // Obrigatório
+    // Campos opcionais
     icon: "https://i.imgur.com/KkGuZYf.png",
-    // Campos adicionais suportados pela API
-    
-    button: "Ver Novidades",
-    timeToLive: 3600 // 1 hora em segundos
+    image: "",
+    button_text: "Ver Novidades",          // Nome do campo corrigido
+    ttl: 3600                             // Nome do campo corrigido
   };
+
+  // Remove campos vazios ou não definidos
+  const payload = Object.fromEntries(
+    Object.entries(notificationData).filter(([_, v]) => v !== null && v !== "")
+  );
 
   try {
     const response = await fetch(apiUrl, {
@@ -23,7 +27,7 @@ module.exports = async (req, res) => {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       },
-      body: JSON.stringify(notificationData)
+      body: JSON.stringify(payload)
     });
 
     const result = await response.json();
@@ -31,33 +35,36 @@ module.exports = async (req, res) => {
     if (!response.ok || !result.success) {
       console.error('Erro na API PushAlert:', {
         status: response.status,
-        response: result
+        response: result,
+        payload_sent: payload
       });
       return res.status(400).json({
         success: false,
-        message: "Falha ao enviar notificação pré-definida",
-        error: result.msg || "Erro desconhecido na API",
-        notification_data: notificationData
+        message: "Falha ao enviar notificação",
+        api_error: result.msg || "Erro desconhecido",
+        payload_sent: payload
       });
     }
 
     return res.status(200).json({
       success: true,
-      message: "Notificação pré-definida enviada com sucesso!",
+      message: "Notificação enviada com sucesso!",
       notification_id: result.id,
       stats: {
-        recipients: result.recipients,
-        delivered: result.delivered,
-        failed: result.failed
+        enviados: result.recipients,
+        entregues: result.delivered
       }
     });
 
   } catch (error) {
-    console.error('Erro no servidor:', error);
+    console.error('Erro no servidor:', {
+      error: error.message,
+      stack: error.stack
+    });
     return res.status(500).json({
       success: false,
-      message: "Erro ao processar notificação pré-definida",
-      error: error.message
+      message: "Erro interno no servidor",
+      error: "Erro ao processar a requisição"
     });
   }
 };
