@@ -1,10 +1,11 @@
 (function() {
   'use strict';
   
-  const CACHE_NAME = 'smart-api-cache-v1';
+  const CACHE_NAME = 'smart-api-cache-v2';
   const CACHE_DURATION = 30 * 60 * 1000; // 30 minutos
   const IGNORED_KEYWORDS = ['chat', 'stream', 'realtime'];
-  
+  const firstRequestMap = new Map(); // Rastreia primeiras requisições
+
   class SmartApi {
     constructor() {
       this.initialized = false;
@@ -15,7 +16,7 @@
       this.cache = await caches.open(CACHE_NAME);
       this.overrideFetch();
       this.initialized = true;
-      console.log('[SmartApi] Initialized with auto-cache for non-realtime endpoints');
+      console.log('[SmartApi] Initialized - First request always allowed');
     }
     
     overrideFetch() {
@@ -31,7 +32,7 @@
         
         // Se não for ignorado e for uma API endpoint, usa cache
         if (!shouldIgnore && this.isApiEndpoint(url)) {
-          return this.handleCachedFetch(url, init);
+          return this.handleCachedFetch(url, init, shouldIgnore);
         }
         
         // Padrão: fetch normal
@@ -45,9 +46,29 @@
              url.includes('api.example.com');
     }
     
-    async handleCachedFetch(url, options) {
+    async handleCachedFetch(url, options, shouldIgnore) {
       try {
-        // Tenta pegar do cache
+        // Verifica se é a primeira requisição para este URL
+        const isFirstRequest = !firstRequestMap.has(url);
+        
+        if (isFirstRequest) {
+          firstRequestMap.set(url, true);
+          console.log(`[SmartApi] First request to ${url} - bypassing cache`);
+          const response = await fetch(url, options);
+          
+          // Cache a resposta mesmo sendo a primeira requisição
+          if (response.ok) {
+            const data = await response.clone().json();
+            await this.cache.put(url, new Response(JSON.stringify({
+              data,
+              timestamp: Date.now()
+            })));
+          }
+          
+          return response;
+        }
+        
+        // Não é primeira requisição - lógica normal de cache
         const cached = await this.cache.match(url);
         
         if (cached) {
@@ -55,19 +76,19 @@
           
           // Se o cache for recente, retorna ele
           if (Date.now() - timestamp < CACHE_DURATION) {
+            console.log(`[SmartApi] Returning cached data for ${url}`);
             return new Response(JSON.stringify(data), {
               headers: { 'Content-Type': 'application/json' }
             });
           }
         }
         
-        // Faz nova requisição
+        // Faz nova requisição se o cache estiver expirado
+        console.log(`[SmartApi] Cache expired/missing for ${url} - fetching fresh`);
         const response = await fetch(url, options);
         
         if (response.ok) {
           const data = await response.clone().json();
-          
-          // Armazena no cache com timestamp
           await this.cache.put(url, new Response(JSON.stringify({
             data,
             timestamp: Date.now()
@@ -92,6 +113,6 @@
     }
   }
   
-  // Auto-inicialização quando adicionada via CDN
+  // Auto-inicialização
   window.SmartApi = new SmartApi();
 })();
