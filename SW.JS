@@ -5,6 +5,7 @@ const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
   '/',
   '/offline.html',
+  'https://i.imgur.com/KkGuZYf.png'
   
 ];
 
