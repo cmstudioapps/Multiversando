@@ -1,14 +1,13 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST,GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
-    // Responde OK para pré-flight
     return res.status(204).end();
   }
 
-  if (req.method !== 'POST') {
+  if (req.method !== 'GET') {
     return res.status(405).json({ success: false, error: 'Method Not Allowed' });
   }
 
@@ -34,17 +33,13 @@ export default async function handler(req, res) {
     try {
       const data = JSON.parse(text);
       if (!response.ok) {
-        console.error("PushAlert API error:", data);
         return res.status(500).json({ success: false, error: data.message || "Erro ao enviar notificação" });
       }
       return res.status(200).json({ success: true, data });
-    } catch (jsonError) {
-      console.error("Erro de parsing da resposta PushAlert:", text);
+    } catch {
       return res.status(500).json({ success: false, error: "Resposta inválida da PushAlert" });
     }
-
   } catch (error) {
-    console.error("Erro no fetch para PushAlert:", error);
     return res.status(500).json({ success: false, error: error.message });
   }
 }
