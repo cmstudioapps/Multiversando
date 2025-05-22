@@ -583,30 +583,7 @@ updateOnlineStatus(); // Verificar status inicial
     </footer>
 <script src="https://caiolibs.vercel.app/modal.js"></script>
 <script>
-fetch("https://pushalert.co/rest/v1/send", {
-  method: "POST",
-  headers: {
-    "Authorization": "4963a3ae3e6d00a306ccf1ad9b15fb1c", // Substitua pela sua chave
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    title: "Título da Notificação",
-    message: "Mensagem da notificação",
-    target_url: "https://seusite.com"
-  })
-})
-.then(response => response.json())
-.then(data => {
-  console.log("Resposta:", data);
-  if (data.success) {
-    alert("Notificação enviada com sucesso!");
-  } else {
-    alert("Erro ao enviar: " + JSON.stringify(data));
-  }
-})
-.catch(error => {
-  console.error("Erro na requisição:", error);
-});
+
 
 
   ZuniAppPrompt.init('https://www.mediafire.com/file/c8q6svkcu829xvl/Multiversando.apk/file');
