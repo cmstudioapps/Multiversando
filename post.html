@@ -672,7 +672,7 @@ text: window.location.href
                 ${mediaContent}
                 
                 <div class="post-content">
-                    ${post.texto ? post.texto.replace(/\n/g, '<br><br>') : 'Nenhum conteúdo disponível.'} - ${post.por || ""}
+                    ${post.texto ? post.texto.replace(/\n/g, '<br><br>') : 'Nenhum conteúdo disponível.'} \n \n  - ${post.por || ""}
                 </div>
                    
 <button style="background-color: purple; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 16px; cursor: pointer;" onclick="Compartilhar()">
