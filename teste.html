@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Enviar Notificação PushAlert</title>
+</head>
+<body>
+  <button onclick="enviarNotificacao()">Enviar Notificação</button>
+
+  <script>
+    async function enviarNotificacao() {
+      const data = {
+        title: "Olá do PushAlert!",
+        message: "Essa é uma notificação de teste.",
+        url: "https://seusite.com",
+        icon: "https://seusite.com/imagem.png"
+      };
+
+      const response = await fetch("https://pushalert.co/rest/v1/send", {
+        method: "POST",
+        headers: {
+          "Authorization": "4963a3ae3e6d00a306ccf1ad9b15fb1c",  // Substitua pela sua API Key
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+      alert(result);
+    }
+  </script>
+</body>
+</html>
