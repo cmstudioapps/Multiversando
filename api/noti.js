@@ -23,23 +23,42 @@ export default async function handler(req, res) {
     const response = await fetch("https://pushalert.co/api/v1/send", {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Accept": "application/json" // Solicita explicitamente JSON
       },
       body: formData.toString()
     });
 
     const text = await response.text();
+    console.log("Raw response:", text); // Log para depuração
 
     try {
-      const data = JSON.parse(text);
+      const data = text ? JSON.parse(text) : {};
+      
       if (!response.ok) {
-        return res.status(500).json({ success: false, error: data.message || "Erro ao enviar notificação" });
+        console.error("PushAlert API error:", data);
+        return res.status(500).json({ 
+          success: false, 
+          error: data.message || data.error || "Erro ao enviar notificação",
+          status: response.status
+        });
       }
+      
       return res.status(200).json({ success: true, data });
-    } catch {
-      return res.status(500).json({ success: false, error: "Resposta inválida da PushAlert" });
+    } catch (e) {
+      console.error("JSON parse error:", e, "Response text:", text);
+      return res.status(500).json({ 
+        success: false, 
+        error: "Resposta inválida da PushAlert",
+        rawResponse: text 
+      });
     }
   } catch (error) {
-    return res.status(500).json({ success: false, error: error.message });
+    console.error("Network error:", error);
+    return res.status(500).json({ 
+      success: false, 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 }
