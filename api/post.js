@@ -68,7 +68,7 @@ export default async function handler(req, res) {
           included_segments: ["All"],
           headings: { pt: dados.titulo, en: dados.titulo },
           contents: { pt: dados.texto, en: dados.texto },
-          url: dados.url || "https://multiversando.vercel.app"
+          url:"https://multiversando.vercel.app"
         })
       });
     }
