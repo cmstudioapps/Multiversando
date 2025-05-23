@@ -73,7 +73,8 @@ if (dados.titulo && dados.texto) {
       headings: { pt: dados.titulo, en: dados.titulo },
       contents: { pt: textoLimitado, en: textoLimitado },
       url: "https://multiversando.vercel.app/index.html",
-  big_picture: dados.imagem
+  big_picture: dados.imagem,
+chrome_web_image: dados.image
     })
   });
 }
