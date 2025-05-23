@@ -4,9 +4,9 @@ export default async function handler(req, res) {
       method: "POST",
       headers: {
         "Authorization": "4963a3ae3e6d00a306ccf1ad9b15fb1c",
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type":"application/json"
       },
-      body: new URLSearchParams({
+      body: new JSON.stringify({
         title: "Notificação de Teste",
         message: "Isso é um teste com PushAlert",
         url: "https://multiversando.vercel.app",
