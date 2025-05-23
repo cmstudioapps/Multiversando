@@ -61,10 +61,10 @@ export default async function handler(req, res) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Basic os_v2_app_yjeezj3nbzaupifjdimjlxwd7z5n6mrvptzuxeuiswcttgjosbfivdd3z3rvk4l5s2gdsg32egyhjk5fkkljdriwdfibr67l372ih2y"
+          "Authorization": "Basic os_v2_app_bbokkq4cnjhqjgbuwznbkiownitgq65d3bxeype2owlhizj2mpssgw55rwb3dhgvlw3fal47ozqpvbpbo46xfegudi2btyl4yctrowa"
         },
         body: JSON.stringify({
-          app_id: "c2484ca7-6d0e-4147-a0a9-1a1895dec3fe",
+          app_id: "085ca543-826a-4f04-9834-b65a1521d66a",
           included_segments: ["All"],
           headings: { pt: dados.titulo, en: dados.titulo },
           contents: { pt: dados.texto, en: dados.texto },
