@@ -4,9 +4,9 @@ export default async function handler(req, res) {
       method: "POST",
       headers: {
         "Authorization": "4963a3ae3e6d00a306ccf1ad9b15fb1c",
-        "Content-Type":"application/json"
+        "Content-Type": "application/json"
       },
-      body: new JSON.stringify({
+      body: JSON.stringify({
         title: "Notificação de Teste",
         message: "Isso é um teste com PushAlert",
         url: "https://multiversando.vercel.app",
@@ -14,15 +14,14 @@ export default async function handler(req, res) {
       })
     });
 
-    const text = await response.text(); // Para entender o que vem de resposta
+    const text = await response.text();
     console.log("Resposta PushAlert:", text);
 
-    // Tenta converter para JSON, se for possível
     try {
       const json = JSON.parse(text);
       res.status(200).json(json);
     } catch (e) {
-      res.status(200).send(text); // Retorna como texto simples se não for JSON
+      res.status(200).send(text);
     }
 
   } catch (err) {
