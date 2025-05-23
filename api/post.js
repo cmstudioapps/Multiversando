@@ -56,26 +56,29 @@ export default async function handler(req, res) {
     }
 
     // Se titulo e texto existirem, envia notificação
-if (dados.titulo && dados.texto) {
-  const textoLimitado = dados.texto.length > 100 
-    ? dados.texto.substring(0, 100) + "..." 
-    : dados.texto;
+    if (dados.titulo && dados.texto) {
+      const textoLimitado = dados.texto.length > 100 
+        ? dados.texto.substring(0, 100) + "..." 
+        : dados.texto;
 
-  await fetch("https://onesignal.com/api/v1/notifications", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Basic os_v2_app_bbokkq4cnjhqjgbuwznbkiownitgq65d3bxeype2owlhizj2mpssgw55rwb3dhgvlw3fal47ozqpvbpbo46xfegudi2btyl4yctrowa"
-    },
-    body: JSON.stringify({
-      app_id: "085ca543-826a-4f04-9834-b65a1521d66a",
-      included_segments: ["All"],
-      headings: { pt: dados.titulo, en: dados.titulo },
-      contents: { pt: textoLimitado, en: textoLimitado },
-      url: "https://multiversando.vercel.app/index.html"
-    })
-  });
-}
+      const notificationPayload = {
+        app_id: "085ca543-826a-4f04-9834-b65a1521d66a",
+        included_segments: ["Subscribed Users"], // Foca em usuários web
+        headings: { pt: dados.titulo, en: dados.titulo },
+        contents: { pt: textoLimitado, en: textoLimitado },
+        url: "https://multiversando.vercel.app/index.html",
+        chrome_web_image: dados.imagem // Imagem para navegadores
+      };
+
+      await fetch("https://onesignal.com/api/v1/notifications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Basic os_v2_app_bbokkq4cnjhqjgbuwznbkiownitgq65d3bxeype2owlhizj2mpssgw55rwb3dhgvlw3fal47ozqpvbpbo46xfegudi2btyl4yctrowa"
+        },
+        body: JSON.stringify(notificationPayload)
+      });
+    }
 
     res.status(200).json({ logar: true, mensagem: "Enviado ao banco de dados com sucesso e notificação disparada!" });
 
