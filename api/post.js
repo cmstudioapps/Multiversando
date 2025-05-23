@@ -1,10 +1,15 @@
-export default function handler(req, res) {
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', 'https://multiversando.vercel.app');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
     res.status(200).end();
+    return;
+  }
+
+  if (req.method !== 'POST') {
+    res.status(405).json({ message: "Método não permitido, use POST" });
     return;
   }
 
@@ -25,33 +30,52 @@ export default function handler(req, res) {
     senha: dados.senha
   };
 
+  // Remover campos de login para não salvar no feed
   delete dados.nome;
   delete dados.senha;
 
-  fetch("https://cm-tube-default-rtdb.firebaseio.com/adm/" + login.nome + "/.json")
-    .then(response => response.json())
-    .then(data => {
-      if (data && data.senha === login.senha) {
-        // Login válido, salva no banco de dados
-        fetch("https://cm-tube-default-rtdb.firebaseio.com/feed/.json", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(dados)
-        })
-          .then(response => response.json())
-          .then(() => {
-            res.status(200).json({ logar: true, mensagem: "Enviado ao banco de dados com sucesso!" });
-          })
-          .catch(error => {
-            res.status(500).json({ logar: true, erro: "Erro ao enviar ao banco de dados: " + error });
-          });
-      } else {
-        res.status(401).json({ logar: false, erro: "Senha ou nome incorretos" });
-      }
-    })
-    .catch(error => {
-      res.status(500).json({ logar: false, erro: "Erro ao verificar login: " + error });
+  try {
+    // Verifica login
+    const loginResponse = await fetch("https://cm-tube-default-rtdb.firebaseio.com/adm/" + login.nome + "/.json");
+    const loginData = await loginResponse.json();
+
+    if (!loginData || loginData.senha !== login.senha) {
+      res.status(401).json({ logar: false, erro: "Senha ou nome incorretos" });
+      return;
+    }
+
+    // Salva no Realtime Database
+    const saveResponse = await fetch("https://cm-tube-default-rtdb.firebaseio.com/feed/.json", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados)
     });
+
+    if (!saveResponse.ok) {
+      throw new Error("Erro ao salvar dados no banco");
+    }
+
+    // Se titulo e texto existirem, envia notificação
+    if (dados.titulo && dados.texto) {
+      await fetch("https://onesignal.com/api/v1/notifications", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Basic os_v2_app_yjeezj3nbzaupifjdimjlxwd7z5n6mrvptzuxeuiswcttgjosbfivdd3z3rvk4l5s2gdsg32egyhjk5fkkljdriwdfibr67l372ih2y"
+        },
+        body: JSON.stringify({
+          app_id: "c2484ca7-6d0e-4147-a0a9-1a1895dec3fe",
+          included_segments: ["All"],
+          headings: { pt: dados.titulo, en: dados.titulo },
+          contents: { pt: dados.texto, en: dados.texto },
+          url: dados.url || "https://multiversando.vercel.app"
+        })
+      });
+    }
+
+    res.status(200).json({ logar: true, mensagem: "Enviado ao banco de dados com sucesso e notificação disparada!" });
+
+  } catch (error) {
+    res.status(500).json({ logar: false, erro: "Erro no servidor: " + error.message });
+  }
 }
