@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   try {
-    const response = await fetch("https://pushalert.co/api/v1/notification/send", {
+    const response = await fetch("https://api.pushalert.co/rest/v1/send", {
       method: "POST",
       headers: {
         "Authorization": "4963a3ae3e6d00a306ccf1ad9b15fb1c",
