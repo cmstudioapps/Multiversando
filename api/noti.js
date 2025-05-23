@@ -14,11 +14,19 @@ export default async function handler(req, res) {
       })
     });
 
-    const data = await response.json();
-    res.status(200).json(data);
+    const text = await response.text(); // Para entender o que vem de resposta
+    console.log("Resposta PushAlert:", text);
 
-  } .catch(err => {
-  console.error("Erro:", err);
-  res.status(500).json({ error: err.message });
-});
+    // Tenta converter para JSON, se for possível
+    try {
+      const json = JSON.parse(text);
+      res.status(200).json(json);
+    } catch (e) {
+      res.status(200).send(text); // Retorna como texto simples se não for JSON
+    }
+
+  } catch (err) {
+    console.error("Erro:", err);
+    res.status(500).json({ error: err.message });
+  }
 }
