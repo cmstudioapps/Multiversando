@@ -72,7 +72,7 @@ if (dados.titulo && dados.texto) {
       included_segments: ["All"],
       headings: { pt: dados.titulo, en: dados.titulo },
       contents: { pt: textoLimitado, en: textoLimitado },
-      url: "https://multiversando.vercel.app"
+      url: "https://multiversando.vercel.app/index.html"
     })
   });
 }
