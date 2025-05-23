@@ -63,10 +63,14 @@ export default async function handler(req, res) {
 
       const notificationPayload = {
         app_id: "085ca543-826a-4f04-9834-b65a1521d66a",
-        included_segments: ["Subscribed Users"], // Foca em usuários web
+        included_segments: ["All"], // Envia para TODOS (celulares + web)
         headings: { pt: dados.titulo, en: dados.titulo },
         contents: { pt: textoLimitado, en: textoLimitado },
         url: "https://multiversando.vercel.app/index.html",
+        // Adiciona suporte melhor para mobile (opcional)
+        large_icon: dados.imagem, // Ícone grande para Android
+        ios_attachments: { id: dados.imagem }, // Imagem para iOS
+        
         chrome_web_image: dados.imagem // Imagem para navegadores
       };
 
