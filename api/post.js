@@ -57,8 +57,8 @@ export default async function handler(req, res) {
 
     // Se titulo e texto existirem, envia notificação
 if (dados.titulo && dados.texto) {
-  const textoLimitado = dados.texto.length > 30 
-    ? dados.texto.substring(0, 30) + "..." 
+  const textoLimitado = dados.texto.length > 100 
+    ? dados.texto.substring(0, 100) + "..." 
     : dados.texto;
 
   await fetch("https://onesignal.com/api/v1/notifications", {
